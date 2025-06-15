@@ -1,3 +1,3 @@
 # TenderIQ
 
-Internship Project <br> for database management
+Internship Project <br> For database management
