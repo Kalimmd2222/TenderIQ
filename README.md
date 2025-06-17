@@ -19,3 +19,7 @@ python3 -c "import fastapi, uvicorn, pymupdf, docx, langchain, sentence_transfor
 python3 -m pip install fastapi uvicorn pymupdf python-docx langchain sentence-transformers faiss-cpu llama-cpp-python streamlit
 <br>
 pip install -r requirements.txt
+<br>
+<b>RUN UI</b>
+<br>
+streamlit run ui/app.py  
