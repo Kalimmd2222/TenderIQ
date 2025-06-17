@@ -17,3 +17,5 @@ pip install streamlit
 python3 -c "import fastapi, uvicorn, pymupdf, docx, langchain, sentence_transformers, faiss, llama_cpp, streamlit; print('✅ All TenderIQ dependencies are installed correctly!')"
 <br>
 python3 -m pip install fastapi uvicorn pymupdf python-docx langchain sentence-transformers faiss-cpu llama-cpp-python streamlit
+<br>
+pip install -r requirements.txt
