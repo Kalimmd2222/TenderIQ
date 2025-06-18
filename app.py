@@ -3,6 +3,8 @@ import requests
 import os
 import json
 
+API_BASE = "http://localhost:8000"
+
 st.set_page_config(page_title="TenderIQ", layout="wide")
 
 # ---------------------- Sidebar: Project Selection -------------------------
@@ -46,12 +48,26 @@ with tab2:
 
     if st.button("Ask"):
         if user_input:
-            # Replace with: answer = call_fastapi(question=user_input)
-            # Simulated response
-            answer = "This is a placeholder answer from the AI."
-            sources = ["Page 3: 'Deadline is July 25, 2025'", "Page 5: 'Eligibility: ISO certified companies'"]
+            try:
+                data = {
+                    "project": selected_project,
+                    "question": user_input
+                }
+                res = requests.post(f"{API_BASE}/ask/", json=data)
+                if res.status_code == 200:
+                    response = res.json()
+                    answer = response.get("answer", "No answer returned.")
+                    sources = response.get("chunks", [])
+                else:
+                    answer = f"❌ Error from backend: {res.status_code}"
+                    sources = []
+            except Exception as e:
+                answer = f"❌ Request failed: {e}"
+                sources = []
 
             st.session_state.chat_history.append((user_input, answer, sources))
+
+
 
     for q, a, s in reversed(st.session_state.chat_history):
         st.markdown(f"**🧑 You:** {q}")
@@ -80,3 +96,17 @@ with tab3:
             st.markdown(f"- 📅 **Deadline**: {task['deadline']}")
             st.markdown(f"- ✅ **Status**: {task['status']}")
             st.markdown("---")
+
+# ---------------------- FastAPI Backend (for uvicorn) -------------------------
+try:
+    from fastapi import FastAPI
+    from src.api.routes import router as api_router
+
+    app = FastAPI()
+    app.include_router(api_router)
+    print("✅ FastAPI initialized successfully")
+
+except Exception as e:
+    print("❌ FastAPI failed to load:", e)
+    app = None
+

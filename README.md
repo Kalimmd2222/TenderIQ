@@ -18,8 +18,15 @@ python3 -c "import fastapi, uvicorn, pymupdf, docx, langchain, sentence_transfor
 <br>
 python3 -m pip install fastapi uvicorn pymupdf python-docx langchain sentence-transformers faiss-cpu llama-cpp-python streamlit
 <br>
+pip install python-multipart
+<br>
 pip install -r requirements.txt
 <br>
 <b>RUN UI</b>
 <br>
-streamlit run ui/app.py  
+streamlit run ui/app.py
+<br>
+<b>RUN FastAPI</b>
+<br>
+uvicorn app:app --reload
+</br>
