@@ -30,3 +30,10 @@ streamlit run ui/app.py
 <br>
 uvicorn app:app --reload
 </br>
+<br>
+Run the UI as using 
+streamlit run app.py
+<br>
+coz the app.py in UI folder is the old code
+</br>
+</br>
