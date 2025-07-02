@@ -24,17 +24,25 @@ def upload_document(
         with open(file_path, "wb") as f:
             f.write(file.file.read())
 
+        print(f"📂 File saved: {file_path}")
+
         # Extract text
         text = extract_text(file_path)
+        print(f"📄 Extracted text length: {len(text)}")
+
         if not text.strip():
             return {"error": "File text could not be extracted or is empty."}
 
         # Chunk the text
         chunks = split_into_chunks(text)
+        print(f"🔪 Number of chunks: {len(chunks)}")
+        if chunks:
+            print(f"💡 First chunk preview: {chunks[0][:100]}")
 
         # Embed chunks
         embedder = get_embedder()
         embeddings = embedder.encode(chunks).tolist()
+        print(f"📏 Embeddings count: {len(embeddings)}")
 
         # Save index + metadata
         save_index(embeddings, chunks, project)

@@ -21,20 +21,41 @@ tab1, tab2, tab3 = st.tabs(["📁 Upload", "💬 Chat", "📋 Tasks"])
 
 # ---------------------- Tab 1: Upload -------------------------
 with tab1:
+
     st.header("📁 Upload Tender Document")
+
     uploaded_file = st.file_uploader("Upload a PDF or DOCX file", type=["pdf", "docx"])
-    
+
     doc_type = st.selectbox("Document Type", ["Main", "Amendment", "Clarification", "Q&A"])
     version = st.text_input("Version (e.g., 1 or 2)", "1")
 
     if uploaded_file and st.button("Upload Document"):
-        with st.spinner("Processing document..."):
-            # Simulate backend call (replace with requests.post or function call)
-            file_path = f"./data/uploads/{uploaded_file.name}"
-            with open(file_path, "wb") as f:
-                f.write(uploaded_file.read())
+        with st.spinner("Uploading and processing document via FastAPI..."):
 
-            st.success("Document uploaded and processed!")
+            # Prepare the form-data
+            files = {"file": (uploaded_file.name, uploaded_file, uploaded_file.type)}
+            data = {
+                "project": selected_project,
+                "doc_type": doc_type,
+                "version": version
+            }
+
+            # Make POST request to FastAPI backend
+            try:
+                response = requests.post(
+                    "http://localhost:8000/upload/",  # Change if your API runs elsewhere
+                    files=files,
+                    data=data
+                )
+
+                if response.status_code == 200:
+                    result = response.json()
+                    st.success(f"✅ {result.get('message')}")
+                else:
+                    st.error(f"❌ Upload failed: {response.status_code} | {response.text}")
+
+            except Exception as e:
+                st.error(f"❌ Could not connect to FastAPI backend: {e}")
 
 # ---------------------- Tab 2: Chat Interface -------------------------
 with tab2:
