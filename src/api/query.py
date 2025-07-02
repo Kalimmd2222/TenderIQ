@@ -55,13 +55,18 @@ def ask_question(req: QueryRequest):
         # Build prompt
         prompt = build_prompt(req.question, relevant_chunks)
 
-        # Get answer (stubbed or real)
+        # Get answer from LLM
         answer = get_llm_response(prompt)
+
+        # 🔒 Suppress sources if answer is placeholder or empty
+        if not answer or answer.strip() == "" or "placeholder" in answer.lower() or "no answer" in answer.lower():
+            relevant_chunks = []
 
         return {
             "question": req.question,
             "answer": answer,
             "chunks": relevant_chunks
         }
+
     except Exception as e:
         return {"error": str(e)}
